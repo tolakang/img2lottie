@@ -1,6 +1,6 @@
 services:
   img2lottie:
-    image: ghcr.io/tolakang/img2lottie:latest
+    image: docker.io/tolakang/img2lottie:latest
     container_name: img2lottie
     restart: unless-stopped
     environment:
