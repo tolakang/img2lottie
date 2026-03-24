@@ -1,43 +1,33 @@
 name: img2lottie
-
-capabilities:
-  - persistent_storage
+version: 1.0.0
+description: Image2Lottie - Free Image to Lottie Converter
 
 port: 8080
-
-notes: >-
-  Image2Lottie - Free Image to Lottie Converter
-  - Frontend: React + Vite on port 8080
-  - API endpoints available at /api/
-
 host_network: false
 
- volumes:
-  - name: img2lottie-data
+containers:
+  - name: img2lottie
+    image: ghcr.io/tolakang/img2lottie:latest
+    image_policy: Always
+    ports:
+      - container_port: 8080
+        protocol: http
+    environment:
+      - name: NODE_ENV
+        value: production
+      - name: PORT
+        value: "8080"
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+
+volumes:
+  - name: data
     mount_path: /data
 
-哨兵_config:
-  img2lottie:
-    type: CloudNativePG
-    values:
-      enabled: false
-
-workload:
-  main:
-    pod:
-      containers:
-        main:
-          image: ghcr.io/YOUR_USERNAME/img2lottie:latest
-          image_policy: Always
-          env:
-            - name: NODE_ENV
-              value: production
-            - name: PORT
-              value: "8080"
-          resources:
-            requests:
-              cpu: 100m
-              memory: 128Mi
-            limits:
-              cpu: 1000m
-              memory: 512Mi
+notes: |
+  Image2Lottie - Free Image to Lottie Converter
+  - Upload images (PNG, JPG, SVG) and convert to Lottie animations
+  - Preview Lottie JSON files with full playback controls
+  - Supports speed control (0.25x-3x) and FPS adjustment (1-100)
