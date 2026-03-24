@@ -1,33 +1,28 @@
-name: img2lottie
-version: 1.0.0
-description: Image2Lottie - Free Image to Lottie Converter
-
 port: 5177
-host_network: false
+hostNetwork: false
 
-containers:
-  - name: img2lottie
-    image: ghcr.io/tolakang/img2lottie:latest
-    image_policy: Always
-    ports:
-      - container_port: 5177
-        protocol: http
-    environment:
-      - name: NODE_ENV
-        value: production
-      - name: PORT
-        value: "5177"
-    resources:
-      limits:
-        cpu: 2000m
-        memory: 2Gi
+workload:
+  main:
+    pod:
+      containers:
+        main:
+          image: ghcr.io/tolakang/img2lottie:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "5177"
+          ports:
+            - containerPort: 5177
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: 2Gi
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
 
-volumes:
-  - name: data
-    mount_path: /data
-
-notes: |
-  Image2Lottie - Free Image to Lottie Converter
-  - Upload images (PNG, JPG, SVG) and convert to Lottie animations
-  - Preview Lottie JSON files with full playback controls
-  - Supports speed control (0.25x-3x) and FPS adjustment (1-100)
+data:
+  persist: true
