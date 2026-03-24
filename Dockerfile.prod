@@ -13,15 +13,30 @@ COPY backend/ ./backend/
 
 RUN npm run build --workspace=frontend
 
-FROM nginx:alpine
+FROM node:20-alpine
 
 COPY --from=builder /app/frontend/dist /usr/share/nginx/html
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
-COPY backend /app/backend
 
-RUN apk add --no-cache nodejs npm && \
-    cd /app/backend && npm install --production
+RUN apk add --no-cache nginx && \
+    mkdir -p /run/nginx
 
-EXPOSE 8080
+RUN cd /app && \
+    cp -r frontend/package*.json ./ && \
+    cp -r backend/package*.json ./ && \
+    cp -r backend/src ./ && \
+    npm install --production
 
-CMD ["sh", "-c", "cd /app/backend && npm run dev"]
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=5177
+
+EXPOSE 5177
+
+RUN echo '#!/bin/sh' > /start.sh && \
+    echo 'nginx &' >> /start.sh && \
+    echo 'cd /app && node src/server.js' >> /start.sh && \
+    chmod +x /start.sh
+
+CMD ["/start.sh"]

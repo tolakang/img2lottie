@@ -2,7 +2,7 @@ name: img2lottie
 version: 1.0.0
 description: Image2Lottie - Free Image to Lottie Converter
 
-port: 8080
+port: 5177
 host_network: false
 
 containers:
@@ -10,13 +10,13 @@ containers:
     image: ghcr.io/tolakang/img2lottie:latest
     image_policy: Always
     ports:
-      - container_port: 8080
+      - container_port: 5177
         protocol: http
     environment:
       - name: NODE_ENV
         value: production
       - name: PORT
-        value: "8080"
+        value: "5177"
     resources:
       limits:
         cpu: 2000m

@@ -1,18 +1,18 @@
 version: '3.8'
 
 services:
-  app:
+  img2lottie:
     build:
       context: .
       dockerfile: Dockerfile.prod
     ports:
-      - "8080:8080"
+      - "5177:5177"
     environment:
       - NODE_ENV=production
-      - PORT=8080
+      - PORT=5177
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8080"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:5177"]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -7,10 +7,10 @@ services:
       dockerfile: Dockerfile.prod
     container_name: img2lottie
     ports:
-      - "8080:8080"
+      - "5177:5177"
     environment:
       - NODE_ENV=production
-      - PORT=8080
+      - PORT=5177
     restart: unless-stopped
     volumes:
       - img2lottie-data:/data

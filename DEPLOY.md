@@ -1,92 +1,68 @@
 # Image2Lottie - Self-Hosted Deployment
 
-## TrueNAS Scale Installation
-
-### Option 1: Docker Compose (Recommended)
-
-1. SSH into your TrueNAS Scale server
-2. Create a directory for the app:
-   ```bash
-   mkdir -p /mnt/pool/apps/img2lottie
-   cd /mnt/pool/apps/img2lottie
-   ```
-
-3. Copy these files to that directory:
-   - `docker-compose.yml`
-   - `Dockerfile`
-   - `Dockerfile.prod`
-   - `frontend/` directory (with Dockerfile and nginx.conf)
-
-4. Build and run:
-   ```bash
-   docker compose up -d
-   ```
-
-5. Access at `http://YOUR_IP:8080`
-
-### Option 2: Manual Docker
+## Quick Start
 
 ```bash
-# Build images
-docker build -t img2lottie-backend -f Dockerfile .
-docker build -t img2lottie-frontend -f frontend/Dockerfile .
-
-# Run containers
-docker run -d -p 8080:80 --name img2lottie-frontend img2lottie-frontend
-docker run -d -p 3001:3001 --name img2lottie-backend img2lottie-backend
-```
-
-### Option 3: Kubernetes/Helm
-
-```bash
-kubectl apply -f k8s-deployment.yaml
-```
-
-## Quick Start with Docker
-
-```bash
-# Clone and run
-git clone https://github.com/YOUR_USERNAME/img2lottie.git
+git clone https://github.com/tolakang/img2lottie.git
 cd img2lottie
-docker compose -f docker-compose.prod.yml up -d
+docker compose up -d
 ```
+
+Access at: **http://YOUR_IP:5177**
+
+## Ports
+
+| Service | Port |
+|---------|------|
+| App | **5177** |
+
+## Docker Compose (Recommended)
+
+```yaml
+services:
+  img2lottie:
+    image: ghcr.io/tolakang/img2lottie:latest
+    container_name: img2lottie
+    ports:
+      - "5177:5177"
+    restart: unless-stopped
+```
+
+## TrueNAS Scale
+
+### Option 1: Docker Compose App
+1. Apps → Add Container → Docker Compose
+2. Use the docker-compose.yml content
+
+### Option 2: Custom App
+Use `truenas-app.yaml` (requires pre-built Docker image)
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PORT` | 8080 | Server port |
+| `PORT` | 5177 | Server port |
 | `NODE_ENV` | production | Environment mode |
 
-## Storage
+## Build & Run Locally
 
-For persistent data, mount volumes:
-- `/data` - App data storage
+```bash
+# Development
+npm install
+npm run dev
 
-## SSL/HTTPS
-
-For SSL termination, use a reverse proxy like Traefik or Nginx:
-
-```yaml
-services:
-  traefik:
-    image: traefik:v2.10
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.yml:/traefik.yml
+# Production
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 ## Health Check
 
 ```bash
-curl http://localhost:8080/health
+curl http://localhost:5177
 ```
 
 ## Troubleshooting
 
-1. **Container won't start**: Check logs with `docker logs <container_name>`
-2. **Port conflicts**: Change port mapping in docker-compose.yml
-3. **Permission issues**: Ensure proper file permissions on mounted volumes
+1. **Port conflict**: Change mapping in docker-compose.yml
+2. **Permission issues**: Ensure proper file permissions
+3. **Build fails**: Check Docker daemon is running
