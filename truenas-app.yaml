@@ -1,0 +1,43 @@
+name: img2lottie
+
+capabilities:
+  - persistent_storage
+
+port: 8080
+
+notes: >-
+  Image2Lottie - Free Image to Lottie Converter
+  - Frontend: React + Vite on port 8080
+  - API endpoints available at /api/
+
+host_network: false
+
+ volumes:
+  - name: img2lottie-data
+    mount_path: /data
+
+哨兵_config:
+  img2lottie:
+    type: CloudNativePG
+    values:
+      enabled: false
+
+workload:
+  main:
+    pod:
+      containers:
+        main:
+          image: ghcr.io/YOUR_USERNAME/img2lottie:latest
+          image_policy: Always
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "8080"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
