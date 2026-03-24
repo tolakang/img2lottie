@@ -59,6 +59,3 @@ jobs:
       - name: Notify deployment
         run: |
           echo "Docker image built and pushed to ghcr.io/tolakang/img2lottie"
-          echo "To deploy on TrueNAS:"
-          echo "1. Update truenas-app.yaml image to: ghcr.io/tolakang/img2lottie:latest"
-          echo "2. Or use docker-compose with image: ghcr.io/tolakang/img2lottie:latest"
