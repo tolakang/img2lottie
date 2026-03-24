@@ -1,28 +1,10 @@
-port: 5177
-hostNetwork: false
-
-workload:
-  main:
-    pod:
-      containers:
-        main:
-          image: ghcr.io/tolakang/img2lottie:latest
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: NODE_ENV
-              value: production
-            - name: PORT
-              value: "5177"
-          ports:
-            - containerPort: 5177
-              protocol: TCP
-          resources:
-            limits:
-              cpu: "2000m"
-              memory: 2Gi
-            requests:
-              cpu: "100m"
-              memory: "128Mi"
-
-data:
-  persist: true
+services:
+  img2lottie:
+    image: ghcr.io/tolakang/img2lottie:latest
+    container_name: img2lottie
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=5177
+    ports:
+      - "5177:5177"
