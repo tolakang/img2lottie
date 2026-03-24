@@ -49,3 +49,13 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Make package public
+        run: |
+          PACKAGE_NAME=$(echo ${{ env.IMAGE_NAME }} | sed 's/\//%2F/g')
+          echo "Making package public: $PACKAGE_NAME"
+          curl -s -X PUT \
+            -H "Authorization: token ${{ secrets.OPENCODE_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/user/packages/container/$PACKAGE_NAME.visibility \
+            -d '{"visibility":"public"}'
